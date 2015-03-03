@@ -1,0 +1,34 @@
+Import('RTT_ROOT')
+Import('rtconfig')
+from building import *
+
+# get current directory
+cwd     = GetCurrentDir()
+
+src	= Split("""
+board.c
+drv_uart.c
+drv_led.c
+drv_eeprom.c
+drv_iap.c
+""")
+
+# add RTC driver.
+if GetDepend('RT_USING_RTC') == True:
+	src += ['drv_rtc.c']
+
+# add spi driver.
+if GetDepend('RT_USING_SPI') == True:
+	src += ['drv_spi.c']
+
+# add i2c driver.
+if GetDepend('RT_USING_I2C') == True:
+	src += ['drv_i2c.c']
+	src += ['drv_mpu6050.c']
+
+CPPPATH = [cwd]
+
+group = DefineGroup('Drivers', src, depend = [''], CPPPATH = CPPPATH)
+
+Return('group')
+
