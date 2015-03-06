@@ -21,11 +21,11 @@
 #include <rtthread.h>
 #include <rtdevice.h>
 #include "drv_led.h"
-#include "spi_wifi_rw009.h"
+#include "drv_spi.h"
 #include "copter.h"
-#include "drv_motors.h"
-#include "stm32_i2c.h"
-#include "mpu6050.h"
+//#include "drv_motors.h"
+#include "drv_i2c.h"
+#include "drv_mpu6050.h"
 
 #ifdef RT_USING_FINSH
 #include "shell.h"
@@ -48,37 +48,16 @@ void rt_init_thread_entry(void* parameter)
 	rt_hw_i2c_init();
 	rt_hw_spi_init();
 	rt_hw_mpu6050_init("i2c1", MPU6050_DEFAULT_ADDRESS);
-	rt_motors_hw_init();
-/* LwIP Initialization */
- #ifdef RT_USING_LWIP
- 	{
- 		extern void lwip_sys_init(void);
+	//rt_motors_hw_init();
 
- 		/* register ethernetif device */
- 		eth_system_device_init();
-
- 		/* initialize wifi interface */
- 		rt_hw_wifi_init("spi10",MODE_STATION);
-
- 		/* init lwip system */
- 		lwip_system_init();
- 		rt_kprintf("TCP/IP initialized!\n");
- 		
- 		set_if("w0","192.168.10.11","192.168.10.1","255.255.255.0");
- 		rw009_join("rtthread_300M","rtt_finsh");
- 	}
- #endif
-	rt_tcpserver_init();
 	apps_copter_init();
 		
-	telnet_server_init();
  #ifdef RT_USING_FINSH
  	/* init finsh */
  	finsh_system_init();
  	finsh_set_device(RT_CONSOLE_DEVICE_NAME);
  #endif
   
-	sys_led_init();
 }
 
 int rt_application_init()

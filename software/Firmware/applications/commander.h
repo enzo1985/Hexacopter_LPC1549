@@ -1,6 +1,6 @@
 #ifndef __ANO_DT_H
 #define __ANO_DT_H
-#include "stm32f2xx.h"
+#include "lpc15xx.h"
 
 #include <rtthread.h>
 
@@ -10,7 +10,7 @@ class Commander
 public:
 	void Init(const char *name);
 
-	void Data_Receive_Anl(u8 *data_buf,u8 num);
+	void Data_Receive_Anl(uint8_t *data_buf,uint8_t num);
 	//检查是否有接收到无线数据
 	void Check_Event(void);
 	//数据发送
@@ -20,14 +20,14 @@ public:
 
 	class flag{
 		public:
-		u8 Send_Status;
-		u8 Send_Senser;
-		u8 Send_PID1;
-		u8 Send_PID2;
-		u8 Send_PID3;
-		u8 Send_RCData;
-		u8 Send_Offset;
-		u8 Send_MotoPwm;
+		uint8_t Send_Status;
+		uint8_t Send_Senser;
+		uint8_t Send_PID1;
+		uint8_t Send_PID2;
+		uint8_t Send_PID3;
+		uint8_t Send_RCData;
+		uint8_t Send_Offset;
+		uint8_t Send_MotoPwm;
 	}f;
 	rt_device_t dev;
   rt_event_t recv_event;
@@ -43,9 +43,9 @@ private:
 	void Send_PID1(void);
 	void Send_PID2(void);
 	void Send_PID3(void);
-	void Send_Check(u16 check);
+	void Send_Check(uint16_t check);
 
-	void Send_Data(u8 *dataToSend , u8 length);
+	void Send_Data(uint8_t *dataToSend , uint8_t length);
 
 };
 
