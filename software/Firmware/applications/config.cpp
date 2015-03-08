@@ -20,7 +20,7 @@ Config::Config(void)
 //Ö¸Ê¾µÆ
 void Config::Pilot_Light(void)
 {
-	static u8 cnt = 0;
+	static uint8_t cnt = 0;
 	
 	if(f.ARMED)
 	{

@@ -22,7 +22,7 @@ void ANO_RC::Init(void)
 
 void ANO_RC::Cal_Command(void)
 {
-	for (u8 i = 0; i < 3; i++) 
+	for (uint8_t i = 0; i < 3; i++) 
 	{	//处理ROLL,PITCH,YAW这三个轴的数据
 		Command[i] = (rawData[i] - RC_MID) * 0.35;
 	}	

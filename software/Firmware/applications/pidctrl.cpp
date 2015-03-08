@@ -60,7 +60,7 @@ void pidctrl::Attitude_Inner_Loop(void)
 {
 	int32_t PIDTerm[3];
 	
-	for(u8 i=0; i<3;i++)
+	for(uint8_t i=0; i<3;i++)
 	{
 		//当油门低于检查值时积分清零
 		if ((rc.rawData[THROTTLE]) < RC_MINCHECK)	
@@ -98,7 +98,7 @@ void pidctrl::Motors_Ctrl(uint16_t throttle, int32_t pidTermRoll, int32_t pidTer
 }	
 void pidctrl::getMotorsPWM(uint16_t* pwm)
 {
-	for(u8 i=0; i< MOTORS_NUM_MAX ; i++)
+	for(uint8_t i=0; i< MOTORS_NUM_MAX ; i++)
    {
 	 pwm[i] = motorPWM[i];
 	 }

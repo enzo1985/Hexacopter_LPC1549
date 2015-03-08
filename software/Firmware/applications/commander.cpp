@@ -19,11 +19,11 @@
 
 Commander cmd;
 
-void Commander::Data_Receive_Anl(u8 *data_buf,u8 num)
+void Commander::Data_Receive_Anl(uint8_t *data_buf,uint8_t num)
 {
-	u8 sum = 0;
+	uint8_t sum = 0;
 	
-	for(u8 i=0;i<(num-1);i++)
+	for(uint8_t i=0;i<(num-1);i++)
 		sum += *(data_buf+i);
 	if(!(sum==*(data_buf+num-1)))		return;		//ÅÐ¶Ïsum
 	
@@ -66,32 +66,32 @@ void Commander::Data_Receive_Anl(u8 *data_buf,u8 num)
 
 	if(*(data_buf+2)==0X03)
 	{
-		rc.rawData[THROTTLE] = (vs16)(*(data_buf+4)<<8)|*(data_buf+5);
-		rc.rawData[YAW] = (vs16)(*(data_buf+6)<<8)|*(data_buf+7);
-		rc.rawData[ROLL] = (vs16)(*(data_buf+8)<<8)|*(data_buf+9);
-		rc.rawData[PITCH] = (vs16)(*(data_buf+10)<<8)|*(data_buf+11);
-		rc.rawData[AUX1] = (vs16)(*(data_buf+12)<<8)|*(data_buf+13);
-		rc.rawData[AUX2] = (vs16)(*(data_buf+14)<<8)|*(data_buf+15);
-		rc.rawData[AUX3] = (vs16)(*(data_buf+16)<<8)|*(data_buf+17);
-		rc.rawData[AUX4] = (vs16)(*(data_buf+18)<<8)|*(data_buf+19);
-		rc.rawData[AUX5] = (vs16)(*(data_buf+20)<<8)|*(data_buf+21);
-		rc.rawData[AUX6] = (vs16)(*(data_buf+22)<<8)|*(data_buf+23);
+		rc.rawData[THROTTLE] = (uint16_t)(*(data_buf+4)<<8)|*(data_buf+5);
+		rc.rawData[YAW] = (uint16_t)(*(data_buf+6)<<8)|*(data_buf+7);
+		rc.rawData[ROLL] = (uint16_t)(*(data_buf+8)<<8)|*(data_buf+9);
+		rc.rawData[PITCH] = (uint16_t)(*(data_buf+10)<<8)|*(data_buf+11);
+		rc.rawData[AUX1] = (uint16_t)(*(data_buf+12)<<8)|*(data_buf+13);
+		rc.rawData[AUX2] = (uint16_t)(*(data_buf+14)<<8)|*(data_buf+15);
+		rc.rawData[AUX3] = (uint16_t)(*(data_buf+16)<<8)|*(data_buf+17);
+		rc.rawData[AUX4] = (uint16_t)(*(data_buf+18)<<8)|*(data_buf+19);
+		rc.rawData[AUX5] = (uint16_t)(*(data_buf+20)<<8)|*(data_buf+21);
+		rc.rawData[AUX6] = (uint16_t)(*(data_buf+22)<<8)|*(data_buf+23);
 	}
 
 	if(*(data_buf+2)==0X10)								//PID1
 	{
 		pid_t pidval;
-		pidval.kp = (vs16)(*(data_buf+4)<<8)|*(data_buf+5);
-		pidval.ki = (vs16)(*(data_buf+6)<<8)|*(data_buf+7);
-		pidval.kd = (vs16)(*(data_buf+8)<<8)|*(data_buf+9);
+		pidval.kp = (uint16_t)(*(data_buf+4)<<8)|*(data_buf+5);
+		pidval.ki = (uint16_t)(*(data_buf+6)<<8)|*(data_buf+7);
+		pidval.kd = (uint16_t)(*(data_buf+8)<<8)|*(data_buf+9);
 		Params_setRollPid(pidval);
-		pidval.kp = (vs16)(*(data_buf+10)<<8)|*(data_buf+11);
-		pidval.ki = (vs16)(*(data_buf+12)<<8)|*(data_buf+13);
-		pidval.kd = (vs16)(*(data_buf+14)<<8)|*(data_buf+15);
+		pidval.kp = (uint16_t)(*(data_buf+10)<<8)|*(data_buf+11);
+		pidval.ki = (uint16_t)(*(data_buf+12)<<8)|*(data_buf+13);
+		pidval.kd = (uint16_t)(*(data_buf+14)<<8)|*(data_buf+15);
 		Params_setPitchPid(pidval);
-		pidval.kp = (vs16)(*(data_buf+16)<<8)|*(data_buf+17);
-		pidval.ki = (vs16)(*(data_buf+18)<<8)|*(data_buf+19);
-		pidval.kd = (vs16)(*(data_buf+20)<<8)|*(data_buf+21);
+		pidval.kp = (uint16_t)(*(data_buf+16)<<8)|*(data_buf+17);
+		pidval.ki = (uint16_t)(*(data_buf+18)<<8)|*(data_buf+19);
+		pidval.kd = (uint16_t)(*(data_buf+20)<<8)|*(data_buf+21);
 		Params_setYawPid(pidval);
 		Params_Save();
 		Send_Check(sum);
@@ -99,17 +99,17 @@ void Commander::Data_Receive_Anl(u8 *data_buf,u8 num)
 	if(*(data_buf+2)==0X11)								//PID2
 	{
 		pid_t pidval;
-		pidval.kp = (vs16)(*(data_buf+4)<<8)|*(data_buf+5);
-		pidval.ki = (vs16)(*(data_buf+6)<<8)|*(data_buf+7);
-		pidval.kd = (vs16)(*(data_buf+8)<<8)|*(data_buf+9);
+		pidval.kp = (uint16_t)(*(data_buf+4)<<8)|*(data_buf+5);
+		pidval.ki = (uint16_t)(*(data_buf+6)<<8)|*(data_buf+7);
+		pidval.kd = (uint16_t)(*(data_buf+8)<<8)|*(data_buf+9);
 		Params_setAltPid(pidval);
-		pidval.kp = (vs16)(*(data_buf+10)<<8)|*(data_buf+11);
-		pidval.ki = (vs16)(*(data_buf+12)<<8)|*(data_buf+13);
-		pidval.kd = (vs16)(*(data_buf+14)<<8)|*(data_buf+15);
+		pidval.kp = (uint16_t)(*(data_buf+10)<<8)|*(data_buf+11);
+		pidval.ki = (uint16_t)(*(data_buf+12)<<8)|*(data_buf+13);
+		pidval.kd = (uint16_t)(*(data_buf+14)<<8)|*(data_buf+15);
 		Params_setLevelPid(pidval);
-		pidval.kp = (vs16)(*(data_buf+16)<<8)|*(data_buf+17);
-		pidval.ki = (vs16)(*(data_buf+18)<<8)|*(data_buf+19);
-		pidval.kd = (vs16)(*(data_buf+20)<<8)|*(data_buf+21);
+		pidval.kp = (uint16_t)(*(data_buf+16)<<8)|*(data_buf+17);
+		pidval.ki = (uint16_t)(*(data_buf+18)<<8)|*(data_buf+19);
+		pidval.kd = (uint16_t)(*(data_buf+20)<<8)|*(data_buf+21);
 		Params_setMagPid(pidval);
 		Params_Save();
 		Send_Check(sum);
@@ -144,7 +144,7 @@ void Commander::Data_Receive_Anl(u8 *data_buf,u8 num)
 
 void Commander::Data_Exchange(void)
 {
-	static u8 cnt = 0;
+	static uint8_t cnt = 0;
 	
 	switch(cnt)
 	{
@@ -194,12 +194,12 @@ void Commander::Data_Exchange(void)
 
 void Commander::Send_Status(void)
 {
-	u8 _cnt=0;
+	uint8_t _cnt=0;
 	data_to_send[_cnt++]=0xAA;
 	data_to_send[_cnt++]=0xAA;
 	data_to_send[_cnt++]=0x01;
 	data_to_send[_cnt++]=0;
-	vs16 _temp;
+	uint16_t _temp;
 	_temp = (int)(imu.angle.x*100);
 	data_to_send[_cnt++]=BYTE1(_temp);
 	data_to_send[_cnt++]=BYTE0(_temp);
@@ -214,7 +214,7 @@ void Commander::Send_Status(void)
 	data_to_send[_cnt++]=BYTE1(_temp);
 	data_to_send[_cnt++]=BYTE0(_temp);
 	
-	vs32 _temp2 = 100;//UltraAlt * 100;
+	uint32_t _temp2 = 100;//UltraAlt * 100;
 	data_to_send[_cnt++]=BYTE3(_temp2);
 	data_to_send[_cnt++]=BYTE2(_temp2);
 	data_to_send[_cnt++]=BYTE1(_temp2);
@@ -222,8 +222,8 @@ void Commander::Send_Status(void)
 	
 	data_to_send[3] = _cnt-4;
 	
-	u8 sum = 0;
-	for(u8 i=0;i<_cnt;i++)
+	uint8_t sum = 0;
+	for(uint8_t i=0;i<_cnt;i++)
 		sum += data_to_send[i];
 	data_to_send[_cnt++]=sum;
 	
@@ -233,8 +233,8 @@ void Commander::Send_Status(void)
 
 void Commander::Send_Senser(void)
 {
-	u8 _cnt=0;
-	vs16 _temp;
+	uint8_t _cnt=0;
+	uint16_t _temp;
 	data_to_send[_cnt++]=0xAA;
 	data_to_send[_cnt++]=0xAA;
 	data_to_send[_cnt++]=0x02;
@@ -267,8 +267,8 @@ void Commander::Send_Senser(void)
 	
 	data_to_send[3] = _cnt-4;
 	
-	u8 sum = 0;
-	for(u8 i=0;i<_cnt;i++)
+	uint8_t sum = 0;
+	for(uint8_t i=0;i<_cnt;i++)
 		sum += data_to_send[i];
 	data_to_send[_cnt++] = sum;
 	
@@ -277,7 +277,7 @@ void Commander::Send_Senser(void)
 
 void Commander::Send_RCData(void)
 {
-	u8 _cnt=0;
+	uint8_t _cnt=0;
 	data_to_send[_cnt++]=0xAA;
 	data_to_send[_cnt++]=0xAA;
 	data_to_send[_cnt++]=0x03;
@@ -305,8 +305,8 @@ void Commander::Send_RCData(void)
 	
 	data_to_send[3] = _cnt-4;
 	
-	u8 sum = 0;
-	for(u8 i=0;i<_cnt;i++)
+	uint8_t sum = 0;
+	for(uint8_t i=0;i<_cnt;i++)
 		sum += data_to_send[i];
 	
 	data_to_send[_cnt++]=sum;
@@ -316,11 +316,11 @@ void Commander::Send_RCData(void)
 
 void Commander::Send_MotoPWM(void)
 {
-	u8 _cnt=0;
+	uint8_t _cnt=0;
 	uint16_t Moto_PWM[MOTORS_NUM_MAX];
 	fc.getMotorsPWM(Moto_PWM);
 	
-	for(u8 i=0;i<MOTORS_NUM_MAX;i++)
+	for(uint8_t i=0;i<MOTORS_NUM_MAX;i++)
 		Moto_PWM[i] -= 1000;
 	
 	data_to_send[_cnt++]=0xAA;
@@ -342,8 +342,8 @@ void Commander::Send_MotoPWM(void)
 
 	data_to_send[3] = _cnt-4;
 	
-	u8 sum = 0;
-	for(u8 i=0;i<_cnt;i++)
+	uint8_t sum = 0;
+	for(uint8_t i=0;i<_cnt;i++)
 		sum += data_to_send[i];
 	
 	data_to_send[_cnt++]=sum;
@@ -353,13 +353,13 @@ void Commander::Send_MotoPWM(void)
 
 void Commander::Send_PID1(void)
 {
-	u8 _cnt=0;
+	uint8_t _cnt=0;
 	data_to_send[_cnt++]=0xAA;
 	data_to_send[_cnt++]=0xAA;
 	data_to_send[_cnt++]=0x10;
 	data_to_send[_cnt++]=0;
 	
-	vs16 _temp;
+	uint16_t _temp;
 	_temp = fc.pid_group[PIDROLL].kP ;
 	data_to_send[_cnt++]=BYTE1(_temp);
 	data_to_send[_cnt++]=BYTE0(_temp);
@@ -390,8 +390,8 @@ void Commander::Send_PID1(void)
 	
 	data_to_send[3] = _cnt-4;
 	
-	u8 sum = 0;
-	for(u8 i=0;i<_cnt;i++)
+	uint8_t sum = 0;
+	for(uint8_t i=0;i<_cnt;i++)
 		sum += data_to_send[i];
 	
 	data_to_send[_cnt++]=sum;
@@ -401,13 +401,13 @@ void Commander::Send_PID1(void)
 
 void Commander::Send_PID2(void)
 {
-	u8 _cnt=0;
+	uint8_t _cnt=0;
 	data_to_send[_cnt++]=0xAA;
 	data_to_send[_cnt++]=0xAA;
 	data_to_send[_cnt++]=0x11;
 	data_to_send[_cnt++]=0;
 	
-	vs16 _temp;
+	uint16_t _temp;
 	_temp = fc.pid_group[PIDALT].kP;
 	data_to_send[_cnt++]=BYTE1(_temp);
 	data_to_send[_cnt++]=BYTE0(_temp);
@@ -438,8 +438,8 @@ void Commander::Send_PID2(void)
 	
 	data_to_send[3] = _cnt-4;
 	
-	u8 sum = 0;
-	for(u8 i=0;i<_cnt;i++)
+	uint8_t sum = 0;
+	for(uint8_t i=0;i<_cnt;i++)
 		sum += data_to_send[i];
 	
 	data_to_send[_cnt++]=sum;
@@ -447,7 +447,7 @@ void Commander::Send_PID2(void)
 	Send_Data(data_to_send, _cnt);
 }
 
-void Commander::Send_Check(u16 check)
+void Commander::Send_Check(uint16_t check)
 {
 	data_to_send[0]=0xAA;
 	data_to_send[1]=0xAA;
@@ -458,8 +458,8 @@ void Commander::Send_Check(u16 check)
 	data_to_send[5]=BYTE1(check);
 	data_to_send[6]=BYTE0(check);
 	
-	u8 sum = 0;
-	for(u8 i=0;i<7;i++)
+	uint8_t sum = 0;
+	for(uint8_t i=0;i<7;i++)
 		sum += data_to_send[i];
 	
 	data_to_send[7]=sum;
@@ -540,7 +540,7 @@ void Commander::Init(const char *name)
 		rt_thread_startup(recv_thread);
 }
 
-void Commander::Send_Data(u8 *dataToSend , u8 length)
+void Commander::Send_Data(uint8_t *dataToSend , uint8_t length)
 {
 	rt_device_write(dev,0,dataToSend,length);
 }
@@ -548,7 +548,7 @@ void Commander::Send_Data(u8 *dataToSend , u8 length)
 
 void Commander::Failsafe_Check(void)
 {
-		static u8 failsafeCnt = 0;
+		static uint8_t failsafeCnt = 0;
 		if(failsafeCnt > 30)
 		{
 			failsafeCnt = 0;
