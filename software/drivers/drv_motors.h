@@ -5,7 +5,7 @@
  extern "C" {
 #endif /* __cplusplus */
 	 
-#define MOTORS_NUM_MAX    4	 
+#define MOTORS_NUM_MAX    6	 
 #define MOTORS_PWM_MAX 2000
 #define MOTORS_PWM_MIN 1000	 
 	 
