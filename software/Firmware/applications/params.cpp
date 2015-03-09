@@ -10,10 +10,10 @@
 #include "pidctrl.h"
 #include "sensor.h"
 #include "string.h"
+#include "drv_eeprom.h"
 
+#define PARAMS_SAVE_ADDRESS    ((uint32_t)0x00) 
 
-#define PARAMS_SAVE_ADDRESS    ((uint32_t)0x080E0000) /* Base @ of Sector 11, 128 Kbytes */
-#define PARAMS_SAVE_Sector      FLASH_Sector_11
 
 static params_t params;
 static bool Params_Read(void);
@@ -145,8 +145,9 @@ fc.pid_group[PIDMAG].kP = val.kp;
 }
 bool Params_Read(void)
 {
-  
-  memcpy(&params,(void*)PARAMS_SAVE_ADDRESS,sizeof(params_t));
+  uint8_t *data;
+	data = (uint8_t *)&params;
+	EEPROM_Read(PARAMS_SAVE_ADDRESS,data,sizeof(params_t));
 	if(params.magic != MAGIC)
   {
 	 return false;
@@ -155,51 +156,13 @@ bool Params_Read(void)
 }
 void Params_Save(void)
 {
-	 uint32_t *data;
-	 uint32_t address, address_end;
+	 uint8_t *data;
    params.magic = MAGIC;
 
-    /* Unlock the Flash */
-    FLASH_Unlock();
-
-    data = (uint32_t *)&params;
-    address = PARAMS_SAVE_ADDRESS;
-    address_end = address + sizeof(params_t);
-	  
-	      /* Clear pending flags (if any) */
-    FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |
-                    FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
-	 
-	  FLASH_EraseSector(PARAMS_SAVE_Sector, VoltageRange_3);
+    data = (uint8_t *)&params;
 	
-    while(address < address_end)
-    {
-        FLASH_Status status;
-        const uint32_t *data_read;
-
-        data_read = (const uint32_t *)address;
-        if(*data_read == *data)
-        {
-            address += 4;
-            data++;
-            continue;
-        }
-
-        __disable_irq();
-        status = FLASH_ProgramWord(address, *data);
-        __enable_irq();
-
-        if (status == FLASH_COMPLETE)
-        {
-            address += 4;
-            data++;
-        }
-        else
-        {
-            continue;
-        }
-    }
-    FLASH_Lock();
+	EEPROM_Write(PARAMS_SAVE_ADDRESS,data,sizeof(params_t));
+    
 }
 
 
