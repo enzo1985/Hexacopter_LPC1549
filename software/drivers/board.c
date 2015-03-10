@@ -24,6 +24,18 @@
 #include <components.h>
 #endif
 
+// cycles per microsecond
+static volatile uint32_t usTicks = 0;
+
+uint32_t GetSysTime_us(void) 
+{
+    register uint32_t ms, cycle_cnt;
+    do {
+        ms = rt_tick_get();
+        cycle_cnt = SysTick->VAL;
+    } while (ms != rt_tick_get());
+    return (ms * 1000) + (usTicks * 1000 - cycle_cnt) / usTicks;
+}
 /**
  * This is the timer interrupt service routine.
  *
@@ -45,6 +57,7 @@ void SysTick_Handler(void)
 void rt_hw_board_init()
 {
 
+    usTicks = SystemCoreClock / 1000000;
     /* init systick */
     SysTick_Config(SystemCoreClock / RT_TICK_PER_SECOND);
     /* set pend exception priority */

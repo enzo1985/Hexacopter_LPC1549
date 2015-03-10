@@ -17,6 +17,10 @@
 #ifndef __BOARD_H__
 #define __BOARD_H__
 
+#ifdef __cplusplus
+ extern "C" {
+#endif /* __cplusplus */
+	 
 #include "LPC15xx.h"
 #include <rtthread.h>
 
@@ -40,5 +44,10 @@ extern int __bss_end;
 
 void rt_hw_board_init(void);
 
+uint32_t GetSysTime_us(void);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif
