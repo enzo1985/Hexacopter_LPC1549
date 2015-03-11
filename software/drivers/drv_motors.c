@@ -2,12 +2,18 @@
 #include "board.h"
 #include "drv_motors.h"
 
+#define SCT_PWM_RATE   20000        /* PWM frequency 20 KHz */
+
+
 static rt_uint16_t pwm_value[MOTORS_NUM_MAX];
 
 static rt_err_t rt_motors_init(rt_device_t dev)
 {
-
-
+   /* Enable SCT0 SCT1 SCT2 clock */
+   LPC_SYSCON->SYSAHBCLKCTRL1 |= (0x01<<2)|(0x01<<3)|(0x01<<4);
+	 /* Peripheral reset control to SCT0 SCT1 SCT2 */
+	 LPC_SYSCON->PRESETCTRL1 |= (0x01<<2)|(0x01<<3)|(0x01<<4);
+	 LPC_SYSCON->PRESETCTRL1 &= ~((0x01<<2)|(0x01<<3)|(0x01<<4));
 	
   return RT_EOK;
 }
