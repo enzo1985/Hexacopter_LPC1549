@@ -2,10 +2,19 @@
 #include "board.h"
 #include "drv_motors.h"
 
+/**
+*  PWM1 <--> PIO0_24  SCT0_OUT0
+*  PWM2 <--> PIO0_2   SCT0_OUT1
+*  PWM3 <--> PIO0_13  SCT1_OUT0
+*  PWM4 <--> PIO0_7   SCT1_OUT1
+*  PWM5 <--> PIO0_25  SCT2_OUT0
+*  PWM6 <--> PIO0_12  SCT2_OUT1
+**/
 #define SCT_PWM_RATE   20000        /* PWM frequency 20 KHz */
 
 
 static rt_uint16_t pwm_value[MOTORS_NUM_MAX];
+
 
 static rt_err_t rt_motors_init(rt_device_t dev)
 {
