@@ -23,6 +23,80 @@ static rt_err_t rt_motors_init(rt_device_t dev)
 	 /* Peripheral reset control to SCT0 SCT1 SCT2 */
 	 LPC_SYSCON->PRESETCTRL1 |= (0x01<<2)|(0x01<<3)|(0x01<<4);
 	 LPC_SYSCON->PRESETCTRL1 &= ~((0x01<<2)|(0x01<<3)|(0x01<<4));
+	 
+	LPC_SCT0->CONFIG |= (1 << 0) | (1 << 17);                 // unified timer, auto limit
+	LPC_SCT1->CONFIG |= (1 << 0) | (1 << 17);                 // unified timer, auto limit
+	LPC_SCT2->CONFIG |= (1 << 0) | (1 << 17);                 // unified timer, auto limit
+	
+	LPC_SCT0->MATCH0            = SCT_PWM_RATE;               // match 0 on PWM cycle
+  LPC_SCT0->MATCHREL0         = SCT_PWM_RATE;
+  LPC_SCT0->MATCH1            = 0;                          // match 1 on val1 (PWM1)
+  LPC_SCT0->MATCHREL1         = 0;
+  LPC_SCT0->MATCH2            = 0;                          // match 2 on val2 (PWM2)
+  LPC_SCT0->MATCHREL2         = 0;
+	
+	LPC_SCT1->MATCH0            = SCT_PWM_RATE;               // match 0 on PWM cycle
+  LPC_SCT1->MATCHREL0         = SCT_PWM_RATE;
+  LPC_SCT1->MATCH1            = 0;                          // match 1 on val1 (PWM3)
+  LPC_SCT1->MATCHREL1         = 0;
+  LPC_SCT1->MATCH2            = 0;                          // match 2 on val2 (PWM4)
+  LPC_SCT1->MATCHREL2         = 0;
+	
+	LPC_SCT2->MATCH0            = SCT_PWM_RATE;               // match 0 on PWM cycle
+  LPC_SCT2->MATCHREL0         = SCT_PWM_RATE;
+  LPC_SCT2->MATCH1            = 0;                          // match 1 on val1 (PWM5)
+  LPC_SCT2->MATCHREL1         = 0;
+  LPC_SCT2->MATCH2            = 0;                          // match 2 on val2 (PWM6)
+  LPC_SCT2->MATCHREL2         = 0;
+
+  LPC_SCT0->EV0_STATE    = 0xFFFFFFFF;                      // event 0 happens in all states
+  LPC_SCT0->EV0_CTRL     = (0 << 0) | (1 << 12);            // match 0 (pwm_cycle) only condition
+  LPC_SCT0->EV1_STATE    = 0xFFFFFFFF;                      // event 1 happens in all states
+  LPC_SCT0->EV1_CTRL     = (1 << 0) | (1 << 12);            // match 1 (pwm1) only condition
+  LPC_SCT0->EV2_STATE    = 0xFFFFFFFF;                      // event 2 happens in all states
+  LPC_SCT0->EV2_CTRL     = (2 << 0) | (1 << 12);            // match 2 (pwm2) only condition
+	
+	LPC_SCT1->EV0_STATE    = 0xFFFFFFFF;                      // event 0 happens in all states
+  LPC_SCT1->EV0_CTRL     = (0 << 0) | (1 << 12);            // match 0 (pwm_cycle) only condition
+  LPC_SCT1->EV1_STATE    = 0xFFFFFFFF;                      // event 1 happens in all states
+  LPC_SCT1->EV1_CTRL     = (1 << 0) | (1 << 12);            // match 1 (pwm3) only condition
+  LPC_SCT1->EV2_STATE    = 0xFFFFFFFF;                      // event 2 happens in all states
+  LPC_SCT1->EV2_CTRL     = (2 << 0) | (1 << 12);            // match 2 (pwm4) only condition
+	
+  LPC_SCT2->EV0_STATE    = 0xFFFFFFFF;                      // event 0 happens in all states
+  LPC_SCT2->EV0_CTRL     = (0 << 0) | (1 << 12);            // match 0 (pwm_cycle) only condition
+  LPC_SCT2->EV1_STATE    = 0xFFFFFFFF;                      // event 1 happens in all states
+  LPC_SCT2->EV1_CTRL     = (1 << 0) | (1 << 12);            // match 1 (pwm5) only condition
+  LPC_SCT2->EV2_STATE    = 0xFFFFFFFF;                      // event 2 happens in all states
+  LPC_SCT2->EV2_CTRL     = (2 << 0) | (1 << 12);            // match 2 (pwm6) only condition
+
+  LPC_SCT0->OUT0_SET        = (1 << 0);                     // event 0       sets  OUT0 (PWM1)
+  LPC_SCT0->OUT0_CLR        = (1 << 1);                     // event 1       clear OUT0 (PWM1)
+  LPC_SCT0->OUT1_SET        = (1 << 0);                     // event 0       sets  OUT1 (PWM2)
+  LPC_SCT0->OUT1_CLR        = (1 << 2);                     // event 2       clear OUT1 (PWM2)
+	
+	LPC_SCT1->OUT0_SET        = (1 << 0);                     // event 0       sets  OUT0 (PWM3)
+  LPC_SCT1->OUT0_CLR        = (1 << 1);                     // event 1       clear OUT0 (PWM3)
+  LPC_SCT1->OUT1_SET        = (1 << 0);                     // event 0       sets  OUT1 (PWM4)
+  LPC_SCT1->OUT1_CLR        = (1 << 2);                     // event 2       clear OUT1 (PWM4)
+	
+  LPC_SCT2->OUT0_SET        = (1 << 0);                     // event 0       sets  OUT0 (PWM5)
+  LPC_SCT2->OUT0_CLR        = (1 << 1);                     // event 1       clear OUT0 (PWM5)
+  LPC_SCT2->OUT1_SET        = (1 << 0);                     // event 0       sets  OUT1 (PWM6)
+  LPC_SCT2->OUT1_CLR        = (1 << 2);                     // event 2       clear OUT1 (PWM6)
+
+  LPC_SCT0->OUTPUT            = 0x00000000;                 // default clear OUT0/1
+	LPC_SCT0->RES               = 0x0000000A;                 // conflict resolution: Inactive state takes precedence
+                                                            // SCT0_OUT0/1: Inactive state low
+  LPC_SCT1->OUTPUT            = 0x00000000;                 // default clear OUT0/1
+	LPC_SCT1->RES               = 0x0000000A;                 // conflict resolution: Inactive state takes precedence
+                                                            // SCT1_OUT0/1: Inactive state low
+	LPC_SCT2->OUTPUT            = 0x00000000;                 // default clear OUT0/1
+	LPC_SCT2->RES               = 0x0000000A;                 // conflict resolution: Inactive state takes precedence
+                                                            // SCT2_OUT0/1: Inactive state low
+	LPC_SCT0->CTRL           &= ~(1 << 2);                    // start timer
+	LPC_SCT1->CTRL           &= ~(1 << 2);                    // start timer
+	LPC_SCT2->CTRL           &= ~(1 << 2);                    // start timer
 	
   return RT_EOK;
 }
@@ -77,10 +151,19 @@ static rt_size_t rt_motors_write(rt_device_t dev, rt_off_t pos,
 			pwm_value[pos+index] = MOTORS_PWM_MAX;
 		  }
     }
-//	TIM2->CCR1 = pwm_value[3] - MOTORS_PWM_MIN;
-//	TIM2->CCR2 = pwm_value[2] - MOTORS_PWM_MIN;
-//	TIM1->CCR1 = pwm_value[0] - MOTORS_PWM_MIN;
-//	TIM1->CCR4 = pwm_value[1] - MOTORS_PWM_MIN;
+		
+  LPC_SCT0->MATCH1            = pwm_value[0] - MOTORS_PWM_MIN;                          // match 1 on val1 (PWM1)
+  LPC_SCT0->MATCHREL1         = pwm_value[0] - MOTORS_PWM_MIN;
+  LPC_SCT0->MATCH2            = pwm_value[1] - MOTORS_PWM_MIN;                          // match 2 on val2 (PWM2)
+  LPC_SCT0->MATCHREL2         = pwm_value[1] - MOTORS_PWM_MIN;
+	LPC_SCT0->MATCH1            = pwm_value[2] - MOTORS_PWM_MIN;                          // match 1 on val1 (PWM3)
+  LPC_SCT0->MATCHREL1         = pwm_value[2] - MOTORS_PWM_MIN;
+  LPC_SCT0->MATCH2            = pwm_value[3] - MOTORS_PWM_MIN;                          // match 2 on val2 (PWM4)
+  LPC_SCT0->MATCHREL2         = pwm_value[3] - MOTORS_PWM_MIN;
+	LPC_SCT0->MATCH1            = pwm_value[4] - MOTORS_PWM_MIN;                          // match 1 on val1 (PWM5)
+  LPC_SCT0->MATCHREL1         = pwm_value[4] - MOTORS_PWM_MIN;
+  LPC_SCT0->MATCH2            = pwm_value[5] - MOTORS_PWM_MIN;                          // match 2 on val2 (PWM6)
+  LPC_SCT0->MATCHREL2         = pwm_value[5] - MOTORS_PWM_MIN;
 
     return size;
 }
