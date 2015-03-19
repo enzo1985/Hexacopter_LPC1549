@@ -1,11 +1,10 @@
-Import('RTT_ROOT')
 Import('rtconfig')
 from building import *
 
-cwd     = os.path.join(str(Dir('#')), 'Math')
+cwd = GetCurrentDir()
 src	= Glob('*.c')
 src	+= Glob('*.cpp')
-CPPPATH = [cwd, str(Dir('#'))]
+CPPPATH = [cwd]
 
 group = DefineGroup('Math', src, depend = [''], CPPPATH = CPPPATH)
 
