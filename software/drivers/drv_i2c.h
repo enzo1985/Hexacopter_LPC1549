@@ -15,6 +15,10 @@
 #ifndef __DRV_I2C_H
 #define __DRV_I2C_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif /* __cplusplus */
+	 
 #include <rtthread.h>
 #include <rtdevice.h>
 
@@ -168,5 +172,9 @@
 
 
 int rt_hw_i2c_init(void);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif // __DRV_I2C_H

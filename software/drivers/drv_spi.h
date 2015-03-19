@@ -15,12 +15,16 @@
 #ifndef __DRV_SPI_H
 #define __DRV_SPI_H
 
+
 #include <stdint.h>
 #include <rtthread.h>
 #include <drivers/spi.h>
 
 #include <lpc15xx.h>
 
+#ifdef __cplusplus
+ extern "C" {
+#endif /* __cplusplus */
 //#define SPI_USE_DMA
 
 struct lpc_spi_bus
@@ -276,5 +280,9 @@ rt_err_t lpc_spi_register(LPC_SPI0_Type *SPI,
                           struct lpc_spi_bus *lpc_spi,
                           const char *spi_bus_name);
 int rt_hw_spi_init(void);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif // __DRV_SPI_H
