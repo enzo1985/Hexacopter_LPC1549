@@ -31,16 +31,6 @@
 #include "shell.h"
 #endif
 
-#ifdef RT_USING_LWIP
-#include <lwip/sys.h>
-#include <lwip/api.h>
-#include <netif/ethernetif.h>
-#include "tcpserver.h"
-#include "telnet.h"
-#endif
-
-extern "C" void set_if(char* netif_name, char* ip_addr, char* gw_addr, char* nm_addr);
-extern "C" int lwip_system_init(void);
 
 void rt_init_thread_entry(void* parameter)
 {
