@@ -2,7 +2,7 @@
 #include <rtdevice.h>
 #include <finsh.h>
 #include "drv_nrf24l01.h"
-#include "stm32f10x.h"
+#include "lpc15xx.h"
 
 /* Registers address definition */
 #define REG_CONFIG              0x00
@@ -58,17 +58,7 @@
 *  nRF24l01 CE   <---> PC14
 *  nRF24l01 IRQ  <---> PA1
 **/
-#define RADIO_GPIO_CE             GPIO_Pin_14
-#define RADIO_GPIO_CE_PORT        GPIOC
-#define RADIO_GPIO_CE_PERIF       RCC_APB2Periph_GPIOC
 
-#define RADIO_GPIO_IRQ            GPIO_Pin_1
-#define RADIO_GPIO_IRQ_PORT       GPIOA
-#define RADIO_GPIO_IRQ_PERIF      RCC_APB2Periph_GPIOA
-#define RADIO_GPIO_IRQ_SRC_PORT   GPIO_PortSourceGPIOA
-#define RADIO_GPIO_IRQ_SRC        GPIO_PinSource1
-#define RADIO_GPIO_IRQ_LINE       EXTI_Line1
-#define RADIO_GPIO_IRQ_CHANNEL    EXTI1_IRQn
 
 typedef struct
 {
@@ -81,58 +71,13 @@ typedef struct
 static const char Tx_Address[5] = {0xE7, 0xE7, 0xE7, 0xE7, 0xE7};
 static const char Rx_Address[5] = {0xE7, 0xE7, 0xE7, 0xE7, 0xE7};
 
-static void RCC_Configuration(void)
-{
-   /* Enable SPI and GPIO clocks */
-  RCC_APB2PeriphClockCmd(RADIO_GPIO_CE_PERIF | RADIO_GPIO_IRQ_PERIF, ENABLE);
-   
-  PWR_BackupAccessCmd(ENABLE);
-        
-  RCC_LSEConfig(RCC_LSE_OFF);
-  
-  BKP_TamperPinCmd(DISABLE);   
-  
-  PWR_BackupAccessCmd(DISABLE);
-}
+
 static void GPIO_Configuration(void)
 {
-  GPIO_InitTypeDef GPIO_InitStructure;
-  
-	 /* Configure the interruption (EXTI Source) */
-  GPIO_InitStructure.GPIO_Pin = RADIO_GPIO_IRQ;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-  GPIO_Init(RADIO_GPIO_IRQ_PORT, &GPIO_InitStructure);
-	
-	/* Configure I/O for the Chip Enable */
-  GPIO_InitStructure.GPIO_Pin = RADIO_GPIO_CE;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-  GPIO_Init(RADIO_GPIO_CE_PORT, &GPIO_InitStructure);
 
-  /* disable the chip enable */
-  GPIO_ResetBits(RADIO_GPIO_CE_PORT, RADIO_GPIO_CE);
 }
-static void EXTI_Configuration(void)
-{
-	EXTI_InitTypeDef EXTI_InitStructure;
 
-  GPIO_EXTILineConfig(RADIO_GPIO_IRQ_SRC_PORT, RADIO_GPIO_IRQ_SRC);
-  EXTI_InitStructure.EXTI_Line = RADIO_GPIO_IRQ_LINE;
-  EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
-  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
-  EXTI_InitStructure.EXTI_LineCmd = ENABLE;
-  EXTI_Init(&EXTI_InitStructure);
-}
-static void NVIC_Configuration(void)
-{
-  NVIC_InitTypeDef NVIC_InitStructure;
-  NVIC_InitStructure.NVIC_IRQChannel = EXTI1_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-}
+
 /* Write len bytes a nRF24L register. 5 Bytes max */
 rt_inline rt_uint8_t write_registers(nrf24l01_dev_t *dev,rt_uint8_t reg, char *buffer, int len)
 {
@@ -369,10 +314,8 @@ rt_err_t rt_hw_nrf24l01_init(const char *spi_name, nrf24l01_mode_t mode)
     device->control     = nrf24l01_control;
     device->user_data   = nrf24l01;
 		
-    RCC_Configuration();
 		GPIO_Configuration();
-		EXTI_Configuration();
-		NVIC_Configuration();
+
 		
     rt_device_register(device, "nrf24l01", RT_DEVICE_FLAG_RDWR);
 		
