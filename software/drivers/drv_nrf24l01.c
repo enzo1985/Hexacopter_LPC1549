@@ -42,7 +42,7 @@
 #define CMD_REUSE_TX_PL         0xE3
 #define CMD_ACTIVATE            0x50
 #define CMD_RX_PL_WID           0x60
-#define CMD01_W_ACK_PAYLOAD(P)  (0xA8|(P&0x0F))
+#define CMD_W_ACK_PAYLOAD(P)  (0xA8|(P&0x0F))
 #define CMD_W_PAYLOAD_NO_ACK    0xD0
 #define CMD_NOP                 0xFF
 
@@ -195,17 +195,36 @@ rt_inline void set_buadrate(nrf24l01_dev_t *dev,nrf24l01_buadrate_t buadrate)
       break;
   }  
 }
+static void set_channel(nrf24l01_dev_t *dev,uint8_t channel)
+{
+  if (channel<126)
+    write_one_register(dev, REG_RF_CH, channel);
+}
 
 static rt_size_t nrf24l01_read(rt_device_t dev, rt_off_t pos, void *buffer, rt_size_t size)
 {
+  unsigned char status;
+	nrf24l01_dev_t *nrf24l01;
+	uint8_t cmd = CMD_W_ACK_PAYLOAD(5);
+  RT_ASSERT(dev->user_data!=RT_NULL);
+	nrf24l01 = (nrf24l01_dev_t *) dev->user_data;
 
-        return (0);
+	status = rt_spi_send_then_send(nrf24l01->spi,&cmd,1,buffer,size);
+
+  return status;
 }
 
 static rt_size_t nrf24l01_write(rt_device_t dev, rt_off_t pos, const void *buffer, rt_size_t size)
 {
+  unsigned char status;
+	nrf24l01_dev_t *nrf24l01;
+	uint8_t cmd = CMD_W_ACK_PAYLOAD(5);
+  RT_ASSERT(dev->user_data!=RT_NULL);
+	nrf24l01 = (nrf24l01_dev_t *) dev->user_data;
 
-        return (0);
+	status = rt_spi_send_then_send(nrf24l01->spi,&cmd,1,buffer,size);
+
+  return status;
 
 }
 
@@ -221,7 +240,7 @@ static rt_err_t nrf24l01_init(rt_device_t dev)
 	 nrf24l01 = (nrf24l01_dev_t *) dev->user_data;
 
   //Set the radio channel
-  nrfSetChannel(configblockGetRadioChannel());
+  set_channel(nrf24l01,8);
   //Set the radio data rate
   set_buadrate(nrf24l01,NRF24L01_BUADRATE_1M);
   //Set radio rx address
