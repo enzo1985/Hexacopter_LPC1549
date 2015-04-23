@@ -250,10 +250,8 @@ int rt_hw_spi_init(void)
     {
         static struct rt_spi_device spi_device;
         static struct lpc_spi_cs  spi_cs1;
-
-
         spi_cs1.ncs = 0;
-        rt_spi_bus_attach_device(&spi_device, "spi10", "spi1", (void *)&spi_cs1);
+        rt_spi_bus_attach_device(&spi_device, "spi00", "spi0", (void *)&spi_cs1);
     }
 
 
