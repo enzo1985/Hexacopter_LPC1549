@@ -23,7 +23,29 @@ static rt_err_t rt_motors_init(rt_device_t dev)
 	 /* Peripheral reset control to SCT0 SCT1 SCT2 */
 	 LPC_SYSCON->PRESETCTRL1 |= (0x01<<2)|(0x01<<3)|(0x01<<4);
 	 LPC_SYSCON->PRESETCTRL1 &= ~((0x01<<2)|(0x01<<3)|(0x01<<4));
-	 
+	 /* Enable the clock for Switch Matrix */
+   LPC_SYSCON->SYSAHBCLKCTRL0 |= (1UL << 12);
+	 /* Switch SCT0_OUT0 to PIO0_24 */
+	 LPC_SWM->PINASSIGN7 &= ~(0xff << 8);
+   LPC_SWM->PINASSIGN7 |= (24 << 8);
+	 /* Switch SCT0_OUT1 to PIO0_2 */
+	 LPC_SWM->PINASSIGN7 &= ~(0xff << 16);
+   LPC_SWM->PINASSIGN7 |= (2 << 16);
+	 /* Switch SCT1_OUT0 to PIO0_13 */
+	 LPC_SWM->PINASSIGN8 &= ~(0xff << 0);
+   LPC_SWM->PINASSIGN8 |= (13 << 0);
+	 /* Switch SCT1_OUT1 to PIO0_7 */
+	 LPC_SWM->PINASSIGN8 &= ~(0xff << 8);
+   LPC_SWM->PINASSIGN8 |= (7 << 8);
+	 /* Switch SCT2_OUT0 to PIO0_25 */
+	 LPC_SWM->PINASSIGN8 &= ~(0xff << 24);
+   LPC_SWM->PINASSIGN8 |= (25 << 24);
+	 /* Switch SCT2_OUT1 to PIO0_12 */
+	 LPC_SWM->PINASSIGN9 &= ~(0xff << 0);
+   LPC_SWM->PINASSIGN9 |= (12 << 0);
+	 /* Disable the clock to the Switch Matrix to save power */
+  LPC_SYSCON->SYSAHBCLKCTRL0 &=  ~(1UL << 12);
+	
 	LPC_SCT0->CONFIG |= (1 << 0) | (1 << 17);                 // unified timer, auto limit
 	LPC_SCT1->CONFIG |= (1 << 0) | (1 << 17);                 // unified timer, auto limit
 	LPC_SCT2->CONFIG |= (1 << 0) | (1 << 17);                 // unified timer, auto limit
