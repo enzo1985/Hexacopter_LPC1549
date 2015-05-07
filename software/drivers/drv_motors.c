@@ -20,6 +20,24 @@ static rt_err_t rt_motors_init(rt_device_t dev)
 {
    /* Enable SCT0 SCT1 SCT2 clock */
    LPC_SYSCON->SYSAHBCLKCTRL1 |= (0x01<<2)|(0x01<<3)|(0x01<<4);
+	       /* Enable the clock for Switch Matrix */
+        LPC_SYSCON->SYSAHBCLKCTRL0 |= (1UL << 12);
+        LPC_IOCON->PIO0_0 = (0x01 << 7);
+        LPC_IOCON->PIO0_16 = (0x01 << 7);
+        LPC_IOCON->PIO0_10 = (0x01 << 7);
+        LPC_IOCON->PIO0_9 = (0x01 << 7);
+
+        LPC_SWM->PINASSIGN7 &= ~(0xff << 8);
+        LPC_SWM->PINASSIGN7 |= (3 << 8);
+	
+        LPC_SWM->PINASSIGN7 &= ~(0xff << 16);
+        LPC_SWM->PINASSIGN7 |= (25 << 16);
+
+        LPC_SWM->PINASSIGN8 &= ~(0xffUL << 0);
+        LPC_SWM->PINASSIGN8 |= (33 << 0);
+
+        /* Disable the clock to the Switch Matrix to save power */
+        LPC_SYSCON->SYSAHBCLKCTRL0 &=  ~(1UL << 12);
 	 /* Peripheral reset control to SCT0 SCT1 SCT2 */
 	 LPC_SYSCON->PRESETCTRL1 |= (0x01<<2)|(0x01<<3)|(0x01<<4);
 	 LPC_SYSCON->PRESETCTRL1 &= ~((0x01<<2)|(0x01<<3)|(0x01<<4));
@@ -156,14 +174,14 @@ static rt_size_t rt_motors_write(rt_device_t dev, rt_off_t pos,
   LPC_SCT0->MATCHREL1         = pwm_value[0] - MOTORS_PWM_MIN;
   LPC_SCT0->MATCH2            = pwm_value[1] - MOTORS_PWM_MIN;                          // match 2 on val2 (PWM2)
   LPC_SCT0->MATCHREL2         = pwm_value[1] - MOTORS_PWM_MIN;
-	LPC_SCT0->MATCH1            = pwm_value[2] - MOTORS_PWM_MIN;                          // match 1 on val1 (PWM3)
-  LPC_SCT0->MATCHREL1         = pwm_value[2] - MOTORS_PWM_MIN;
-  LPC_SCT0->MATCH2            = pwm_value[3] - MOTORS_PWM_MIN;                          // match 2 on val2 (PWM4)
-  LPC_SCT0->MATCHREL2         = pwm_value[3] - MOTORS_PWM_MIN;
-	LPC_SCT0->MATCH1            = pwm_value[4] - MOTORS_PWM_MIN;                          // match 1 on val1 (PWM5)
-  LPC_SCT0->MATCHREL1         = pwm_value[4] - MOTORS_PWM_MIN;
-  LPC_SCT0->MATCH2            = pwm_value[5] - MOTORS_PWM_MIN;                          // match 2 on val2 (PWM6)
-  LPC_SCT0->MATCHREL2         = pwm_value[5] - MOTORS_PWM_MIN;
+	LPC_SCT1->MATCH1            = pwm_value[2] - MOTORS_PWM_MIN;                          // match 1 on val1 (PWM3)
+  LPC_SCT1->MATCHREL1         = pwm_value[2] - MOTORS_PWM_MIN;
+  LPC_SCT1->MATCH2            = pwm_value[3] - MOTORS_PWM_MIN;                          // match 2 on val2 (PWM4)
+  LPC_SCT1->MATCHREL2         = pwm_value[3] - MOTORS_PWM_MIN;
+	LPC_SCT2->MATCH1            = pwm_value[4] - MOTORS_PWM_MIN;                          // match 1 on val1 (PWM5)
+  LPC_SCT2->MATCHREL1         = pwm_value[4] - MOTORS_PWM_MIN;
+  LPC_SCT2->MATCH2            = pwm_value[5] - MOTORS_PWM_MIN;                          // match 2 on val2 (PWM6)
+  LPC_SCT2->MATCHREL2         = pwm_value[5] - MOTORS_PWM_MIN;
 
     return size;
 }
