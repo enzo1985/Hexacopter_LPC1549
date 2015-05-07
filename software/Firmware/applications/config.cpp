@@ -1,6 +1,6 @@
 /******************** (C) COPYRIGHT 2014 ANO Tech ***************************
  * 作者		 ：匿名科创
- * 文件名  ：ANO_Config.cpp
+ * 文件名  ：Config.cpp
  * 描述    ：配置文件
  * 官网    ：www.anotc.com
  * 淘宝    ：anotc.taobao.com
