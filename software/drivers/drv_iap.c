@@ -1,5 +1,5 @@
 #include "drv_iap.h"
-
+#include "rtthread.h"
 
 /* Prepare sector for write operation */
 uint8_t IAP_PreSectorForReadWrite(uint32_t strSector, uint32_t endSector)
@@ -9,8 +9,9 @@ uint8_t IAP_PreSectorForReadWrite(uint32_t strSector, uint32_t endSector)
     command[0] = IAP_PREWRRITE_CMD;
     command[1] = strSector;
     command[2] = endSector;
+	  rt_enter_critical();
     iap_entry(command, result);
-
+    rt_exit_critical();
     return result[0];
 }
 
@@ -24,7 +25,9 @@ uint8_t IAP_CopyRamToFlash(uint32_t dstAdd, uint32_t *srcAdd, uint32_t byteswrt)
     command[2] = (uint32_t) srcAdd;
     command[3] = byteswrt;
     command[4] = SystemCoreClock / 1000;
+    rt_enter_critical();
     iap_entry(command, result);
+    rt_exit_critical();
 
     return result[0];
 }
@@ -38,7 +41,9 @@ uint8_t IAP_EraseSector(uint32_t strSector, uint32_t endSector)
     command[1] = strSector;
     command[2] = endSector;
     command[3] = SystemCoreClock / 1000;
+    rt_enter_critical();
     iap_entry(command, result);
+    rt_exit_critical();
 
     return result[0];
 }
@@ -51,7 +56,9 @@ uint8_t IAP_BlankCheckSector(uint32_t strSector, uint32_t endSector)
     command[0] = IAP_BLANK_CHECK_SECTOR_CMD;
     command[1] = strSector;
     command[2] = endSector;
+    rt_enter_critical();
     iap_entry(command, result);
+    rt_exit_critical();
 
     return result[0];
 }
@@ -62,7 +69,9 @@ uint32_t IAP_ReadPID()
     uint32_t command[5], result[4];
 
     command[0] = IAP_REPID_CMD;
+    rt_enter_critical();
     iap_entry(command, result);
+    rt_exit_critical();
 
     return result[1];
 }
@@ -73,7 +82,9 @@ uint8_t IAP_ReadBootCode()
     uint32_t command[5], result[4];
 
     command[0] = IAP_READ_BOOT_CODE_CMD;
+    rt_enter_critical();
     iap_entry(command, result);
+    rt_exit_critical();
 
     return result[0];
 }
@@ -87,7 +98,9 @@ uint8_t IAP_Compare(uint32_t dstAdd, uint32_t srcAdd, uint32_t bytescmp)
     command[1] = dstAdd;
     command[2] = srcAdd;
     command[3] = bytescmp;
+    rt_enter_critical();
     iap_entry(command, result);
+    rt_exit_critical();
 
     return result[0];
 }
@@ -98,7 +111,9 @@ uint8_t IAP_ReinvokeISP()
     uint32_t command[5], result[4];
 
     command[0] = IAP_REINVOKE_ISP_CMD;
+    rt_enter_critical();
     iap_entry(command, result);
+    rt_exit_critical();
 
     return result[0];
 }
@@ -109,7 +124,9 @@ uint32_t IAP_ReadUID()
     uint32_t command[5], result[4];
 
     command[0] = IAP_READ_UID_CMD;
+    rt_enter_critical();
     iap_entry(command, result);
+    rt_exit_critical();
 
     return result[1];
 }
@@ -123,7 +140,9 @@ uint8_t IAP_ErasePage(uint32_t strPage, uint32_t endPage)
     command[1] = strPage;
     command[2] = endPage;
     command[3] = SystemCoreClock / 1000;
+    rt_enter_critical();
     iap_entry(command, result);
+    rt_exit_critical();
 
     return result[0];
 }
