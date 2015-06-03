@@ -12,7 +12,7 @@ rt_err_t led_hw_on(rt_uint8_t leds)
         LPC_GPIO_PORT->CLR[LED_RED_PORT]  |= (0x01 << LED_RED_PIN);
 
     return RT_EOK;
-}
+
 
 rt_err_t led_hw_off(rt_uint8_t leds)
 {
@@ -24,7 +24,7 @@ rt_err_t led_hw_off(rt_uint8_t leds)
 
     if (leds & LED_RED)
         LPC_GPIO_PORT->SET[LED_RED_PORT]  |= (0x01 << LED_RED_PIN);
-
+     LPC
     return RT_EOK;
 }
 
@@ -64,5 +64,5 @@ rt_err_t led_hw_init(void)
     return RT_EOK;
 }
 
-INIT_DEVICE_EXPORT(rt_led_hw_init);
+INIT_DEVICE_EXPORT(led_hw_init);
 
